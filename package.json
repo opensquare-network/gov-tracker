@@ -1,0 +1,14 @@
+{
+  "name": "gov-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "lint": "yarn workspace @gov-tracker/scan lint"
+  },
+  "repository": "git@github.com:opensquare-network/gov-tracker.git",
+  "author": "Yongfeng LI <wliyongfeng@gmail.com>",
+  "license": "MIT"
+}
