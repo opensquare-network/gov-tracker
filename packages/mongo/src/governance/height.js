@@ -1,4 +1,4 @@
-import { getGovScanDb } from "./db";
+const { getGovScanDb } = require("./db");
 
 async function updateGovScanDbHeight(height) {
   const db = getGovScanDb();
