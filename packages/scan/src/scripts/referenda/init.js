@@ -7,6 +7,7 @@ const { saveVotesForOneFinishedReferendum } = require("./finished");
 const { insertVotesForActiveReferenda } = require("./active");
 const chunk = require("lodash.chunk");
 const { governance: { updateGovScanDbHeight, initGovScanDb } } = require("@gov-tracker/mongo");
+const sortBy = require("lodash.sortby");
 
 async function getLatestHeight(api) {
   const header = await api.rpc.chain.getHeader();
@@ -22,8 +23,9 @@ async function getLatestHeight(api) {
   const indexer = getBlockIndexer(block.block);
 
   const referenda = await getNormalizedReferenda(indexer);
-  console.log(`Total ${referenda.length} queried`);
-  const finishedReferenda = referenda.filter(r => !r.isActive);
+  const sortedReferenda = sortBy(referenda, ["referendumIndex"]);
+  console.log(`Total ${sortedReferenda.length} queried`);
+  const finishedReferenda = sortedReferenda.filter(r => !r.isActive);
   const finishedReferendaChunk = chunk(finishedReferenda, 10);
   for (const chunk of finishedReferendaChunk) {
     const promises = [];
@@ -32,7 +34,7 @@ async function getLatestHeight(api) {
     }
     await Promise.all(promises);
   }
-  const activeReferenda = referenda.filter(r => r.isActive);
+  const activeReferenda = sortedReferenda.filter(r => r.isActive);
   await insertVotesForActiveReferenda(api, activeReferenda, indexer);
 
   await updateGovScanDbHeight(indexer.blockHeight);
