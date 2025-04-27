@@ -3,6 +3,13 @@ const {
 } = require("@osn/scan-common");
 const { insertReferendaVotes } = require("../../common/referenda/votes");
 const { getIndexerByHeight } = require("../common/indexer");
+const { governance: { getReferendaVoteCol } } = require("@gov-tracker/mongo");
+
+async function alreadyHasVotes(referendumIndex) {
+  const col = await getReferendaVoteCol();
+  const votesCount = await col.count({ referendumIndex });
+  return votesCount > 0;
+}
 
 async function getTrackId(api, referendumIndex, height) {
   const blockHash = await api.rpc.chain.getBlockHash(height);
@@ -20,6 +27,12 @@ async function saveVotesForOneFinishedReferendum(api, referendumObj = {}) {
   const { referendumIndex, voteFinishedHeight } = referendumObj;
   if (!voteFinishedHeight) {
     throw new Error(`No vote finished height for referendum ${referendumIndex}`);
+  }
+
+  const handled = await alreadyHasVotes(referendumIndex);
+  if (handled) {
+    console.log(`Finished referendum ${referendumIndex} already handled`);
+    return;
   }
 
   const trackId = await getTrackId(api, referendumIndex, voteFinishedHeight - 1);
