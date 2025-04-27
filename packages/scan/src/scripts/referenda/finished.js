@@ -1,0 +1,34 @@
+const {
+  chain: { findBlockApi },
+} = require("@osn/scan-common");
+const { insertReferendaVotes } = require("../../common/referenda/votes");
+const { getIndexerByHeight } = require("../common/indexer");
+
+async function getTrackId(api, referendumIndex, height) {
+  const blockHash = await api.rpc.chain.getBlockHash(height);
+  const blockApi = await findBlockApi(blockHash);
+  const optionInfo = await blockApi.query.referenda.referendumInfoFor(referendumIndex);
+  const info = optionInfo.unwrap();
+  if (!info.isOngoing) {
+    throw new Error(`Referendum ${referendumIndex} should be ongoing at ${height}`);
+  }
+
+  return info.asOngoing.track.toNumber();
+}
+
+async function saveVotesForOneFinishedReferendum(api, referendumObj = {}) {
+  const { referendumIndex, voteFinishedHeight } = referendumObj;
+  if (!voteFinishedHeight) {
+    throw new Error(`No vote finished height for referendum ${referendumIndex}`);
+  }
+
+  const trackId = await getTrackId(api, referendumIndex, voteFinishedHeight - 1);
+  const indexer = await getIndexerByHeight(api, voteFinishedHeight);
+
+  await insertReferendaVotes(referendumIndex, trackId, indexer);
+  console.log(`Finished referendum ${referendumIndex} votes inserted`);
+}
+
+module.exports = {
+  saveVotesForOneFinishedReferendum,
+};
