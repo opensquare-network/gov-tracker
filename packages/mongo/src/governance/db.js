@@ -25,7 +25,14 @@ async function _createIndexes() {
     process.exit(1);
   }
 
-  // create indexes for referendaVoteCol
+  referendaVoteCol.createIndex({ referendumIndex: 1 });
+  referendaVoteCol.createIndex({ account: 1 });
+  // For query delegations to one delegatee on a referendum
+  referendaVoteCol.createIndex({
+    referendumIndex: 1,
+    isDelegating: 1,
+    target: 1,
+  });
 }
 
 async function tryInit(col) {
