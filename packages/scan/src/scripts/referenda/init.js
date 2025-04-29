@@ -17,7 +17,7 @@ async function getLatestHeight(api) {
 (async () => {
   await initGovScanDb();
   const api = await getApi();
-  const height = await getLatestHeight(api);
+  const height = 25789878;
   const blockHash = await api.rpc.chain.getBlockHash(height);
   const block = await api.rpc.chain.getBlock(blockHash);
   const indexer = getBlockIndexer(block.block);
