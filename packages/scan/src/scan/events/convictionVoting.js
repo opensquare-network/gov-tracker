@@ -1,7 +1,7 @@
 const {
   env: { currentChain },
 } = require("@osn/scan-common");
-const { setVotedMark } = require("../../store");
+const { setVotedMark, addReferendaFinishedAt } = require("../../store");
 
 const chainSectionMap = {};
 const defaultSection = "convictionVoting";
@@ -18,6 +18,9 @@ function handleVoteEvents(indexer, event) {
 
   if (["Voted", "VoteRemoved", "Delegated", "Undelegated"].includes(method)) {
     setVotedMark(indexer.blockHeight);
+  } else if (["Confirmed", "Rejected", "TimedOut", "Cancelled", "Killed"].includes(method)) {
+    const referendumIndex = event.data[0].toNumber();
+    addReferendaFinishedAt(indexer.blockHeight, referendumIndex);
   }
 }
 
