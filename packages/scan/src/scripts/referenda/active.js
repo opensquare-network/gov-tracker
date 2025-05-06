@@ -1,11 +1,15 @@
 const {
   chain: { findBlockApi },
 } = require("@osn/scan-common");
-const { normalizeVotingForEntry } = require("../../common/referenda/normalizeVotingForEntry");
+const {
+  normalizeVotingForEntry,
+} = require("../../common/referenda/normalizeVotingForEntry");
 const { extractDirectVotes } = require("../../common/referenda/direct");
 const { extractDelegations } = require("../../common/referenda/delegation");
 const { populateQueryAt } = require("../../common/referenda/common");
-const { governance: { batchInsertReferendaVotes } } = require("@gov-tracker/mongo");
+const {
+  governance: { batchInsertReferendaVotes },
+} = require("@gov-tracker/mongo");
 
 async function insertVotesForActiveReferenda(api, referenda, indexer) {
   const blockApi = await findBlockApi(indexer.blockHash);

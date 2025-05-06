@@ -2,9 +2,10 @@ const { updateGovScanDbHeight } = require("@gov-tracker/mongo/src/governance");
 const {
   updateFinishedReferendaVotes,
 } = require("./updateFinishedReferendaVotes");
+const { updateActiveReferendaVotes } = require("./updateActiveReferendaVotes");
 
 async function doBlockJob(blockIndexer) {
-  // todo: 1. update active referenda votes
+  await updateActiveReferendaVotes(blockIndexer);
   await updateFinishedReferendaVotes(blockIndexer.blockHeight);
 
   await updateGovScanDbHeight(blockIndexer.blockHeight);

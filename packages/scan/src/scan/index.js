@@ -1,4 +1,6 @@
-const { governance: { getGovScanDb } } = require("@gov-tracker/mongo");
+const {
+  governance: { getGovScanDb },
+} = require("@gov-tracker/mongo");
 const {
   chain: { getLatestUnFinalizedHeight, fetchBlocks },
   utils: { sleep },
