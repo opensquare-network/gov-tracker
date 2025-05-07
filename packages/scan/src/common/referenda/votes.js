@@ -4,7 +4,9 @@ const {
 const { normalizeVotingForEntry } = require("./normalizeVotingForEntry");
 const { extractDirectVotes } = require("./direct");
 const { extractDelegations } = require("./delegation");
-const { governance: { batchInsertReferendaVotes } } = require("@gov-tracker/mongo");
+const {
+  governance: { batchInsertReferendaVotes },
+} = require("@gov-tracker/mongo");
 const { populateQueryAt } = require("./common");
 
 async function insertReferendaVotes(referendumIndex, trackId, indexer) {
