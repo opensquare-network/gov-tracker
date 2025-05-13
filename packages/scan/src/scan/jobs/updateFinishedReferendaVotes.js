@@ -6,13 +6,13 @@ const {
   updateVotesForOneFinishedReferendum,
 } = require("../../scripts/referenda/finished");
 
-async function updateFinishedReferendaVotes(blockHeight) {
+async function updateFinishedReferendaVotes(blockIndexer) {
   const api = await getApi();
-  const finishedReferenda = getFinishedReferenda(blockHeight);
+  const finishedReferenda = getFinishedReferenda(blockIndexer.blockHeight);
   for (const referendumIndex of finishedReferenda) {
     await updateVotesForOneFinishedReferendum(api, {
       referendumIndex,
-      voteFinishedHeight: blockHeight,
+      voteFinishedHeight: blockIndexer.blockHeight,
     });
   }
 }

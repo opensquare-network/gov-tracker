@@ -6,7 +6,7 @@ const { updateActiveReferendaVotes } = require("./updateActiveReferendaVotes");
 
 async function doBlockJob(blockIndexer) {
   await updateActiveReferendaVotes(blockIndexer);
-  await updateFinishedReferendaVotes(blockIndexer.blockHeight);
+  await updateFinishedReferendaVotes(blockIndexer);
 
   await updateGovScanDbHeight(blockIndexer.blockHeight);
 }

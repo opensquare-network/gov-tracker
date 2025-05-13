@@ -1,16 +1,17 @@
-const {
-  chain: { getApi },
-} = require("@osn/scan-common");
 const { getNormalizedReferenda } = require("../query/referenda");
-const {
-  insertVotesForActiveReferenda,
-} = require("../../scripts/referenda/active");
+const { insertVotesForReferenda } = require("../../scripts/referenda/common");
+const { hasVotedMark } = require("../../store");
 
 async function updateActiveReferendaVotes(indexer) {
-  const api = await getApi();
+  if (!hasVotedMark(indexer.blockHeight)) {
+    return;
+  }
   const referenda = await getNormalizedReferenda(indexer);
   const activeReferenda = referenda.filter((r) => r.isActive);
-  await insertVotesForActiveReferenda(api, activeReferenda, indexer);
+  for (const { referendumIndex, trackId } of activeReferenda) {
+    await insertVotesForReferenda({ referendumIndex, trackId }, indexer);
+    console.log(`Active referendum ${referendumIndex} votes updated`);
+  }
 }
 
 module.exports = {

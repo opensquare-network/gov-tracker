@@ -1,11 +1,11 @@
 const {
   chain: { findBlockApi },
 } = require("@osn/scan-common");
-const { insertReferendaVotes } = require("../../common/referenda/votes");
 const { getIndexerByHeight } = require("../common/indexer");
 const {
   governance: { getReferendaVoteCol },
 } = require("@gov-tracker/mongo");
+const { insertVotesForReferenda } = require("./common");
 
 async function alreadyHasVotes(referendumIndex) {
   const col = await getReferendaVoteCol();
@@ -50,7 +50,7 @@ async function saveVotesForOneFinishedReferendum(api, referendumObj = {}) {
   );
   const indexer = await getIndexerByHeight(api, voteFinishedHeight);
 
-  await insertReferendaVotes(referendumIndex, trackId, indexer);
+  await insertVotesForReferenda({ referendumIndex, trackId }, indexer);
   console.log(`Finished referendum ${referendumIndex} votes inserted`);
 }
 
@@ -69,7 +69,7 @@ async function updateVotesForOneFinishedReferendum(api, referendumObj = {}) {
   );
   const indexer = await getIndexerByHeight(api, voteFinishedHeight);
 
-  await insertReferendaVotes(referendumIndex, trackId, indexer);
+  await insertVotesForReferenda({ referendumIndex, trackId }, indexer);
   console.log(`Finished referendum ${referendumIndex} votes inserted`);
 }
 
