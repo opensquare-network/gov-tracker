@@ -1,4 +1,6 @@
-const { governance: { getGovScanDb } } = require("@gov-tracker/mongo");
+const {
+  governance: { getGovScanDb },
+} = require("@gov-tracker/mongo");
 const {
   chain: { getLatestUnFinalizedHeight, fetchBlocks },
   utils: { sleep },
@@ -44,6 +46,7 @@ async function scanGov() {
     const blocks = await fetchBlocks(heights);
     for (const { height, block, events } of blocks) {
       await handleBlock(block, events);
+      console.log(`block ${height} done`);
 
       if (height % 80000 === 0) {
         process.exit(0);
