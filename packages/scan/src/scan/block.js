@@ -18,11 +18,11 @@ function clearStore(blockHeight) {
 async function handleBlock(block, blockEvents) {
   const blockIndexer = getBlockIndexer(block);
 
-  clearStore(blockIndexer.blockHeight);
-
   await handleEvents(blockEvents, blockIndexer);
 
   await doBlockJob(blockIndexer);
+
+  clearStore(blockIndexer.blockHeight);
 }
 
 module.exports = {
