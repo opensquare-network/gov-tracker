@@ -3,7 +3,7 @@ const {
 } = require("@gov-tracker/mongo");
 const isEmpty = require("lodash.isempty");
 
-async function votes(_, _args) {
+async function referendumVotes(_, _args) {
   const { referendumIndex, offset, limit } = _args;
   if (parseInt(limit) > 100) {
     throw new Error("Over max page size 100");
@@ -38,5 +38,5 @@ async function votes(_, _args) {
 }
 
 module.exports = {
-  votes,
+  referendumVotes,
 };
