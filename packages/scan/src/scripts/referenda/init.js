@@ -3,7 +3,7 @@ const {
   chain: { getApi, getBlockIndexer },
 } = require("@osn/scan-common");
 const { getNormalizedReferenda } = require("../../scan/query/referenda");
-const { saveVotesForOneFinishedReferendum } = require("./finished");
+const { saveVotesForOneFinishedReferendum, alreadyHasVotes } = require("./finished");
 const { insertVotesForActiveReferenda } = require("./active");
 const chunk = require("lodash.chunk");
 const { governance: { updateGovScanDbHeight, initGovScanDb } } = require("@gov-tracker/mongo");
@@ -27,10 +27,20 @@ async function getLatestHeight(api) {
   console.log(`Total ${sortedReferenda.length} queried`);
   const finishedReferenda = sortedReferenda.filter(r => !r.isActive);
   const finishedReferendaChunk = chunk(finishedReferenda, 10);
+  let count = 0;
   for (const chunk of finishedReferendaChunk) {
     const promises = [];
     for (const referendum of chunk) {
-      promises.push(saveVotesForOneFinishedReferendum(api, referendum));
+      if (count > 10) {
+        process.exit(0);
+      }
+
+      const { referendumIndex, voteFinishedHeight } = referendum;
+      const handled = await alreadyHasVotes(referendumIndex);
+      if (!handled) {
+        promises.push(saveVotesForOneFinishedReferendum(api, referendum));
+        count += 1;
+      }
     }
     await Promise.all(promises);
   }

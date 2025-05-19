@@ -76,4 +76,5 @@ async function updateVotesForOneFinishedReferendum(api, referendumObj = {}) {
 module.exports = {
   saveVotesForOneFinishedReferendum,
   updateVotesForOneFinishedReferendum,
+  alreadyHasVotes,
 };
