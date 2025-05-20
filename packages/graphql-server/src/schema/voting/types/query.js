@@ -1,10 +1,6 @@
 const queries = /* GraphQL */ `
   type Query {
-    referendumVotes(
-      referendumIndex: Int!
-      offset: Int!
-      limit: Int!
-    ): PagedVotes!
+    referendaVotes(referendumIndex: Int!): [Vote]!
   }
 `;
 

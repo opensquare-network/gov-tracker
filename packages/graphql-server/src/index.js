@@ -7,7 +7,7 @@ const { initDbs } = require("./init");
 
 const port = parseInt(process.env.PORT) || 7100;
 
-async function main() {
+(async () => {
   await initDbs();
   console.log("DB initialized");
 
@@ -16,6 +16,4 @@ async function main() {
   server.listen(port, () => {
     console.info(`Server is running on http://localhost:${port}/graphql`);
   });
-}
-
-main();
+})();
