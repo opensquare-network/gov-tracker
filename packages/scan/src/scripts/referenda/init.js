@@ -45,7 +45,7 @@ async function getLatestHeight(api) {
     await Promise.all(promises);
   }
   const activeReferenda = sortedReferenda.filter(r => r.isActive);
-  await insertVotesForActiveReferenda(api, activeReferenda, indexer);
+  await insertVotesForActiveReferenda(activeReferenda, indexer);
 
   await updateGovScanDbHeight(indexer.blockHeight);
   process.exit(0);
