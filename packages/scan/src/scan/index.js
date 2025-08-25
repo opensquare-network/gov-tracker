@@ -8,6 +8,7 @@ const {
 } = require("@osn/scan-common");
 const { getScanStep } = require("../common/env");
 const { handleBlock } = require("./block");
+const { updateAllPreimages } = require("../common/updatePreimages");
 
 function getTargetHeight(startHeight) {
   const chainHeight = getLatestUnFinalizedHeight();
@@ -30,8 +31,15 @@ function getHeights(start, end) {
   return heights;
 }
 
+async function startJobs() {
+  await updateAllPreimages();
+}
+
 async function scanGov() {
   const db = await getGovScanDb();
+
+  await startJobs();
+
   let scanHeight = await db.getScanHeight();
   /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
   while (true) {

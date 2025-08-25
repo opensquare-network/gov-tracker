@@ -1,5 +1,6 @@
 const { handleVoteEvents } = require("./convictionVoting");
 const { handleReferendaEvents } = require("./referenda");
+const { handlePreimageEvents } = require("./preimage");
 
 async function handleEvents(events = [], blockIndexer) {
   for (let eventIndex = 0; eventIndex < events.length; eventIndex++) {
@@ -12,6 +13,7 @@ async function handleEvents(events = [], blockIndexer) {
 
     await handleVoteEvents(indexer, event);
     await handleReferendaEvents(indexer, event);
+    await handlePreimageEvents(indexer, event);
   }
 }
 
