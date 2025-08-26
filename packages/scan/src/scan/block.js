@@ -4,15 +4,17 @@ const {
 const { handleEvents } = require("./events");
 const { doBlockJob } = require("./jobs");
 const {
-  clearVotedMark,
-  clearFinishedReferendaAt,
-  clearVotes,
+  // clearVotedMark,
+  // clearFinishedReferendaAt,
+  // clearVotes,
+  clearPreimageHashesAt,
 } = require("../store");
 
 function clearStore(blockHeight) {
-  clearVotedMark(blockHeight);
-  clearFinishedReferendaAt(blockHeight);
-  clearVotes(blockHeight);
+  // clearVotedMark(blockHeight);
+  // clearFinishedReferendaAt(blockHeight);
+  // clearVotes(blockHeight);
+  clearPreimageHashesAt(blockHeight);
 }
 
 async function handleBlock(block, blockEvents) {

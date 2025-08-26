@@ -1,6 +1,6 @@
-const {
-  governance: { getGovScanDb },
-} = require("@gov-tracker/mongo");
+// const {
+//   governance: { getGovScanDb },
+// } = require("@gov-tracker/mongo");
 const {
   chain: { getLatestUnFinalizedHeight, fetchBlocks },
   utils: { sleep },
@@ -31,16 +31,14 @@ function getHeights(start, end) {
   return heights;
 }
 
-async function startJobs() {
+async function initialize() {
   await updateAllPreimages();
 }
 
 async function scanGov() {
-  const db = await getGovScanDb();
+  await initialize();
 
-  await startJobs();
-
-  let scanHeight = await db.getScanHeight();
+  let scanHeight = getLatestUnFinalizedHeight();
   /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
   while (true) {
     const chainHeight = getLatestUnFinalizedHeight();

@@ -3,33 +3,13 @@ const {
   chain: { getApi },
 } = require("@osn/scan-common");
 
-function convertTicket(ticket) {
-  if (!ticket) return null;
-  return {
-    who: ticket[0].toJSON(),
-    amount: ticket[1].toNumber(),
-  };
-}
-
-function getPreimageHashAndLen(requestStatus) {
+function getPreimageHashAndStatus(requestStatus) {
   const [{ args }, optStatus] = requestStatus;
   const hash = args[0].toJSON();
-
-  let len = null;
-  let ticket = null;
-  const status = optStatus.unwrapOr(null);
-  if (status.isRequested) {
-    len = status.asRequested.maybeLen.unwrapOr(null)?.toNumber();
-    ticket = convertTicket(status.asRequested.maybeTicket.unwrapOr(null));
-  } else if (status.isUnrequested) {
-    len = status.asUnrequested.len.toNumber();
-    ticket = convertTicket(status.asUnrequested.ticket);
-  }
-
+  const status = optStatus.toJSON();
   return {
     hash,
-    len,
-    ticket,
+    ...status,
   };
 }
 
@@ -40,13 +20,13 @@ async function getPreimageHex(hash, len) {
 }
 
 async function getPreimage(requestStatus) {
-  const { hash, len, ticket } = getPreimageHashAndLen(requestStatus);
+  const { hash, ...others } = getPreimageHashAndStatus(requestStatus);
+  const len = others.unrequested?.len || others.requested?.maybeLen;
   const hex = await getPreimageHex(hash, len);
   return {
     hash,
-    len,
+    ...others,
     hex,
-    ticket,
   };
 }
 
@@ -56,13 +36,9 @@ async function savePreimages(preimages) {
     hash: { $nin: preimages.map((p) => p.hash) },
   });
   const bulk = preimageCol.initializeUnorderedBulkOp();
-  for (const { hash, len, hex, ticket } of preimages) {
+  for (const { hash, ...others } of preimages) {
     bulk.find({ hash }).upsert().updateOne({
-      $set: {
-        len,
-        hex,
-        ticket,
-      },
+      $set: others,
     });
   }
   await bulk.execute();
@@ -78,7 +54,7 @@ async function updateAllPreimages() {
 }
 
 module.exports = {
-  getPreimageHashAndLen,
+  getPreimageHashAndStatus,
   getPreimageHex,
   updateAllPreimages,
 };
