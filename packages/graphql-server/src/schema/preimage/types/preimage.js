@@ -3,6 +3,12 @@ const preimage = /* GraphQL */ `
     hash: String
     len: Int
     hex: String
+    ticket: Ticket
+  }
+
+  type Ticket {
+    who: String
+    amount: Float
   }
 `;
 
