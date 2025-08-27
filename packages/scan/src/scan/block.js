@@ -3,17 +3,9 @@ const {
 } = require("@osn/scan-common");
 const { handleEvents } = require("./events");
 const { doBlockJob } = require("./jobs");
-const {
-  // clearVotedMark,
-  // clearFinishedReferendaAt,
-  // clearVotes,
-  clearPreimageHashesAt,
-} = require("../store");
+const { clearPreimageHashesAt } = require("../store");
 
 function clearStore(blockHeight) {
-  // clearVotedMark(blockHeight);
-  // clearFinishedReferendaAt(blockHeight);
-  // clearVotes(blockHeight);
   clearPreimageHashesAt(blockHeight);
 }
 

@@ -16,7 +16,7 @@ function handlePreimageEvents(indexer, event) {
     return;
   }
 
-  if (["Noted", "Cleared"].includes(method)) {
+  if (["Noted", "Requested", "Cleared"].includes(method)) {
     const preimageHash = event.data[0].toString();
     addPreimageHash(indexer.blockHeight, preimageHash);
   }

@@ -1,5 +1,3 @@
-const { handleVoteEvents } = require("./convictionVoting");
-const { handleReferendaEvents } = require("./referenda");
 const { handlePreimageEvents } = require("./preimage");
 
 async function handleEvents(events = [], blockIndexer) {
@@ -11,8 +9,6 @@ async function handleEvents(events = [], blockIndexer) {
       indexer = { ...indexer, extrinsicIndex };
     }
 
-    await handleVoteEvents(indexer, event);
-    await handleReferendaEvents(indexer, event);
     await handlePreimageEvents(indexer, event);
   }
 }
