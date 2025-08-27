@@ -16,6 +16,9 @@ function getPreimageHashAndStatus(requestStatus) {
 async function getPreimageHex(hash, len) {
   const api = await getApi();
   const preimage = await api.query.preimage.preimageFor([hash, len]);
+  if (preimage.isNone) {
+    return null;
+  }
   return preimage.toHex();
 }
 
