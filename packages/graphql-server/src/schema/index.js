@@ -3,9 +3,13 @@ const {
   resolvers: votingResolvers,
   typeDefs: votingTypeDefs,
 } = require("./voting");
+const {
+  resolvers: preimageResolvers,
+  typeDefs: preimageTypeDefs,
+} = require("./preimage");
 
-let resolvers = [votingResolvers];
-let typeDefs = [...votingTypeDefs];
+let resolvers = [votingResolvers, preimageResolvers];
+let typeDefs = [...votingTypeDefs, ...preimageTypeDefs];
 
 const schema = makeExecutableSchema({
   resolvers,

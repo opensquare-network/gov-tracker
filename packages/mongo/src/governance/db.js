@@ -6,15 +6,17 @@ const {
 let db = null;
 
 let referendaVoteCol = null;
+let preimageCol = null;
 
 async function initGovScanDb() {
   db = new ScanDb(
     getEnvOrThrow("MONGO_GOV_SCAN_URL"),
-    getEnvOrThrow("MONGO_GOV_SCAN_NAME"),
+    getEnvOrThrow("MONGO_GOV_SCAN_NAME")
   );
   await db.init();
 
   referendaVoteCol = await db.createCol("referendaVote");
+  preimageCol = await db.createCol("preimage");
 
   _createIndexes().then(() => console.log("proxy scan DB indexes created!"));
 }
@@ -33,6 +35,8 @@ async function _createIndexes() {
     isDelegating: 1,
     target: 1,
   });
+
+  preimageCol.createIndex({ hash: 1 });
 }
 
 async function tryInit(col) {
@@ -46,6 +50,11 @@ async function getReferendaVoteCol() {
   return referendaVoteCol;
 }
 
+async function getPreimageCol() {
+  await tryInit(preimageCol);
+  return preimageCol;
+}
+
 async function getGovScanDb() {
   if (!db) {
     await initGovScanDb();
@@ -54,9 +63,9 @@ async function getGovScanDb() {
   return db;
 }
 
-
 module.exports = {
   initGovScanDb,
   getReferendaVoteCol,
+  getPreimageCol,
   getGovScanDb,
-}
+};
