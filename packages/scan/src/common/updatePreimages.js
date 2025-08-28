@@ -53,7 +53,12 @@ async function updateAllPreimages() {
   const preimages = await Promise.all(
     requestStatuses.map((requestStatus) => getPreimage(requestStatus))
   );
-  await savePreimages(preimages);
+  const statuses = await api.query.preimage.statusFor.entries();
+  const oldPreimages = await Promise.all(
+    statuses.map((status) => getPreimage(status))
+  );
+
+  await savePreimages([...preimages, ...oldPreimages]);
 }
 
 module.exports = {

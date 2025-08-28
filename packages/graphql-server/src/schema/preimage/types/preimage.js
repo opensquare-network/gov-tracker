@@ -10,11 +10,14 @@ const preimage = /* GraphQL */ `
     maybeTicket: Ticket
     maybeLen: Int
     count: Int
+    deposit: Ticket
+    len: Int
   }
 
   type Unrequested {
     ticket: Ticket
     len: Int
+    deposit: Ticket
   }
 
   type Ticket {
